@@ -41,9 +41,9 @@ def white_noise(d, image, mask_linear, mask_median, w, h):
 
     plt.subplot(235)
     plt.title("Image after applying median filter")
-    img_after_applying_median_filter, mse_median_filter, noise_reduction_koef_median_filter = my_median_filter(noise_image,
-                                                                                                            mask_median,
-                                                                                                            w, h, image)
+    img_after_applying_median_filter, mse_median_filter, noise_reduction_koef_median_filter = custom_median_filter(noise_image,
+                                                                                                                   mask_median,
+                                                                                                                   w, h, image)
     print(f"[White noise] MSE for median filter with signal/noise ration {d}:", mse_median_filter)
     print(f"[White noise] Reduction koef for median filter with signal/noise ration {d}:", noise_reduction_koef_median_filter)
     plt.imshow(img_after_applying_median_filter*255, cmap='gray', vmin=0, vmax=255)
@@ -81,7 +81,7 @@ def impulse_noise(p, image, mask_linear, mask_median, w, h):
 
     plt.subplot(235)
     plt.title("Image after applying median filter")
-    img_after_applying_median_filter, mse_median_filter, noise_reduction_koef_median_filter = my_median_filter(
+    img_after_applying_median_filter, mse_median_filter, noise_reduction_koef_median_filter = custom_median_filter(
         noise_image,
         mask_median,
         w, h, image)
@@ -97,7 +97,7 @@ def linear_filter(noise_image, mask, w, h, orig_image):
     noise_reduction_koef = np.mean((processed_image  * 255 - orig_image * 255) ** 2) / np.mean((noise_image * 255 - orig_image * 255) ** 2)
     return processed_image, mse, noise_reduction_koef
 
-def my_median_filter(noise_image, mask, w, h, orig_image):
+def custom_median_filter(noise_image, mask, w, h, orig_image):
     processed_image = scipy.ndimage.median_filter(noise_image, footprint=mask)
     error_dispersion = ((np.sum(processed_image*255) - np.sum(orig_image * 255)) ** 2) / w / h
     noise_reducation_koef = np.mean((processed_image * 255 - orig_image * 255) ** 2) / np.mean((noise_image * 255 - orig_image * 255) ** 2)
